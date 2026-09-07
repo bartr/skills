@@ -18,17 +18,17 @@ patterns but do not depend on any framework at runtime.
 | Skill | Responsibility | Location |
 |-------|----------------|----------|
 | `brd` | Builds a business requirements document from notes, covering objectives, measures, scope, and risks | [skills/brd/SKILL.md](skills/brd/SKILL.md) |
-| `context-first` | Session outer loop: frame, fit check, and close ritual ending in a tagged release | [skills/context-first/SKILL.md](skills/context-first/SKILL.md) |
-| `design-thinking-lite` | Validates the real problem before anything is built, and hands off evidence-backed requirements | [skills/design-thinking-lite/SKILL.md](skills/design-thinking-lite/SKILL.md) |
+| `design-thinking` | Validates the real problem before anything is built, and hands off evidence-backed requirements | [skills/design-thinking/SKILL.md](skills/design-thinking/SKILL.md) |
 | `prd` | Builds a PRD from stream-of-consciousness notes, with cited provenance and an explicit gap list | [skills/prd/SKILL.md](skills/prd/SKILL.md) |
 | `rpi` | Research, Plan, Implement, Review inner loop, with per-phase constraints and artifacts | [skills/rpi/SKILL.md](skills/rpi/SKILL.md) |
+| `sessions` | Session outer loop: frame, fit check, and close ritual ending in a tagged release | [skills/sessions/SKILL.md](skills/sessions/SKILL.md) |
 
 Bundled assets:
 
 | Asset | Used by |
 |-------|---------|
 | [brd-template.md](skills/brd/assets/brd-template.md) | `brd` output structure |
-| [session-log-template.md](skills/context-first/assets/session-log-template.md) | `context-first` close ritual and health signals |
+| [session-log-template.md](skills/sessions/assets/session-log-template.md) | `sessions` close ritual and health signals |
 | [prd-template.md](skills/prd/assets/prd-template.md) | `prd` output structure, including deliberate underspecification |
 
 ## How They Fit Together
@@ -37,16 +37,16 @@ Bundled assets:
 flowchart LR
     A[Idea or request] --> B[brd]
     B --> C{Problem validated?}
-    C -- No --> D[design-thinking-lite]
+    C -- No --> D[design-thinking]
     D --> E[prd]
     C -- Yes --> E
-    E --> F[context-first session]
+    E --> F[sessions]
     F --> G[rpi]
     G --> H[Shipped and tagged]
 ```
 
 Start at the skill that owns the next real decision. A bounded engineering task
-needs only `rpi`. A settled requirement needs `context-first` and `rpi`. An
+needs only `rpi`. A settled requirement needs `sessions` and `rpi`. An
 ambiguous customer request starts further left.
 
 ## Documentation

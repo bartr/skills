@@ -1,9 +1,9 @@
 ---
-name: design-thinking-lite
+name: design-thinking
 description: 'Validate the real customer problem before anything gets built. Use when a request arrives as a proposed solution, when the users, outcome, or requirements are still unclear, or when preparing requirements for a rapid prototype, discovery session, or customer workshop. Produces a framed problem, a tested low-fidelity concept, and an evidence-backed PRD handoff for the RPI workflow. Do not use when requirements are already validated and approved.'
 ---
 
-# Design Thinking Lite
+# Design Thinking
 
 A focused discovery workflow that turns an ambiguous request or a proposed solution into a validated problem statement and an evidence-backed PRD that the RPI workflow can act on.
 

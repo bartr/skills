@@ -1,9 +1,9 @@
 ---
-name: context-first
+name: sessions
 description: 'Plan and ship work in focused sessions of about 90 to 120 minutes that each end in a tagged, tested release. Use when starting a work session, framing a goal, deciding what is out of scope, running the Research, Plan, Implement, Review loop, doing a fit check before implementing, or closing a session with tests, tag, repo memory, and a log entry. Also use when sessions run long, scope drifts, work piles up unmerged, or each session starts cold.'
 ---
 
-# Context First
+# Sessions
 
 Session-based planning for AI-native engineering. The unit of work is one focused session, roughly 90 to 120 minutes, that ends in a coherent shipped artifact rather than a partially finished ticket.
 

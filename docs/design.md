@@ -11,9 +11,11 @@ the distribution and runtime surface for our workflow. We will not make
 
 We will contribute or maintain a `context-first` plugin that packages the
 session loop, the Research, Plan, Implement, and Review lifecycle, and the
-requirements artifacts as reusable skills. Discovery and PRD authoring are
-separate skills so that ambiguous customer work has an explicit route without
-imposing that overhead on bounded engineering work.
+requirements artifacts as reusable skills. The plugin keeps the `context-first`
+name as the umbrella for the methodology, while the session loop itself ships as
+the `sessions` skill. Discovery and PRD authoring are separate skills so that
+ambiguous customer work has an explicit route without imposing that overhead on
+bounded engineering work.
 
 The package must preserve the workflow controls that matter: evidence-based
 research, explicit acceptance criteria, scoped implementation, independent
@@ -30,23 +32,23 @@ verbatim or inherit its extension-specific mechanisms.
 ```mermaid
 flowchart LR
     A[Request or idea] --> B{Problem validated?}
-    B -- No --> C[design-thinking-lite]
+    B -- No --> C[design-thinking]
     C --> D[Notes and evidence]
     B -- Yes --> D
     D --> E[prd]
-    E --> F[context-first frame]
+    E --> F[sessions: frame]
     F --> G[rpi: Research]
     G --> H[rpi: Plan]
-    H --> I[context-first fit check]
+    H --> I[sessions: fit check]
     I --> J[rpi: Implement]
     J --> K[rpi: Review]
-    K --> L[context-first close]
+    K --> L[sessions: close]
 ```
 
 Each skill stands on its own and composes with the others. `rpi` runs standalone
-for a single task. `context-first` wraps it with the session frame, the fit
+for a single task. `sessions` wraps it with the session frame, the fit
 check, and the close ritual. `prd` feeds it scope and acceptance criteria, and
-`design-thinking-lite` feeds `prd` when the problem itself is unvalidated. `brd`
+`design-thinking` feeds `prd` when the problem itself is unvalidated. `brd`
 sits upstream of `prd` when the business case is what needs settling. No skill
 requires the others to be installed.
 
@@ -75,8 +77,8 @@ Supported initial profiles:
 | Profile | Installed artifacts | Intended use |
 |---------|---------------------|--------------|
 | `rpi` | `rpi` alone | A single non-trivial task, without the session loop |
-| `session` | `context-first`, `rpi`, and `prd` | Engineering teams with settled requirements |
-| `discovery` | `design-thinking-lite`, `brd`, and `prd` | Customer discovery, workshops, and ambiguous requests |
+| `session` | `sessions`, `rpi`, and `prd` | Engineering teams with settled requirements |
+| `discovery` | `design-thinking`, `brd`, and `prd` | Customer discovery, workshops, and ambiguous requests |
 | `full` | All five skills | Discovery that continues into delivery |
 | `governed` | `full` plus organization-approved instructions | Teams that require prescribed engineering or security standards |
 
@@ -108,8 +110,8 @@ cd copilot-rpi
 
 | Step | Work | Status |
 |------|------|--------|
-| 1 | Author the `context-first` session skill and session log template | Done |
-| 2 | Author the `design-thinking-lite` discovery skill | Done |
+| 1 | Author the `sessions` skill and session log template | Done |
+| 2 | Author the `design-thinking` discovery skill | Done |
 | 3 | Author the `prd` skill and PRD template | Done |
 | 4 | Author the `rpi` skill as a standalone inner loop that other skills leverage | Done |
 | 5 | Author the `brd` skill and BRD template | Done |
