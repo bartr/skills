@@ -1,31 +1,57 @@
 ---
 title: Design and Delivery Plan
-description: Distribution decision, target architecture, installer requirements, and delivery status for the context-first skill set.
+description: Approach, target architecture, installer requirements, and delivery status for the context-first skill set.
 ---
 
-## Decision
+## Approach
 
-We will use [Awesome Copilot](https://github.com/github/awesome-copilot) as
-the distribution and runtime surface for our workflow. We will not make
-[HVE Core](https://github.com/microsoft/hve-core) a required dependency.
+We use the GitHub CLI skills command, the same mechanism
+[Awesome Copilot](https://github.com/github/awesome-copilot) uses to distribute
+its catalog. This is a choice of plumbing, not a dependency on a catalog or a
+framework. Skills are markdown packages that install into a repository, so teams
+can reuse published skills, edit them, and author their own on the same footing.
+That authorability is the point: a skill someone cannot change is a framework
+with extra steps.
 
-We will contribute or maintain a `context-first` plugin that packages the
-session loop, the Research, Plan, Implement, and Review lifecycle, and the
-requirements artifacts as reusable skills. The plugin keeps the `context-first`
-name as the umbrella for the methodology, while the session loop itself ships as
-the `sessions` skill. Discovery and PRD authoring are separate skills so that
-ambiguous customer work has an explicit route without imposing that overhead on
-bounded engineering work.
+Like [HVE Core](https://github.com/microsoft/hve-core), we subscribe to Design
+Thinking and RPI. We implement both differently. HVE Core targets a chat-centric
+workflow, while these skills target agents, so each phase carries its own
+constraints and produces its own artifacts rather than running as a sequence of
+chat prompts.
 
-The package must preserve the workflow controls that matter: evidence-based
-research, explicit acceptance criteria, scoped implementation, independent
-review, durable records, and clear follow-up routing. It must not copy HVE Core
-verbatim or inherit its extension-specific mechanisms.
+PRDs and BRDs are not novel. They are used frequently across AI-assisted software
+engineering, and they are included here because requirements work is where most
+delivery failures start. The variation worth noting is that both are built from
+written notes with cited provenance, rather than assembled through an interview.
+
+`sessions` came out of our experience working with GSIs and enterprise customers.
+The recurring problem there was not generation speed. It was work that never
+closed: scope drift, unmerged branches, and every session starting cold.
+
+## Composition
+
+Every skill is optional, and each one is useful on its own. Skills may use other
+skills:
+
+| Skill | Uses | Standalone behavior |
+|-------|------|---------------------|
+| `sessions` | `rpi` for the inner loop | Falls back to inline per-phase prompts |
+| `prd` | Discovery output when it exists | Drafts from whatever notes are available |
+| `design-thinking` | Nothing | Hands off notes and evidence |
+| `brd` | Nothing | Drafts from stakeholder notes |
+| `rpi` | Nothing | Runs a single task end to end |
+
+No skill requires another to be installed. Install the one that owns the next
+decision and add others when they earn their place.
+
+The set preserves the workflow controls that matter: evidence-based research,
+explicit acceptance criteria, scoped implementation, independent review, durable
+records, and clear follow-up routing.
 
 > [!IMPORTANT]
-> Source artifacts must be owned, reviewed, versioned, and validated by our
-> team. HVE Core may be used as a reference for patterns, not as an installation
-> dependency or runtime requirement.
+> Source artifacts are owned, reviewed, versioned, and validated by our team.
+> HVE Core is a reference for patterns, not an installation dependency or a
+> runtime requirement.
 
 ## Target Architecture
 
@@ -44,13 +70,6 @@ flowchart LR
     J --> K[rpi: Review]
     K --> L[sessions: close]
 ```
-
-Each skill stands on its own and composes with the others. `rpi` runs standalone
-for a single task. `sessions` wraps it with the session frame, the fit
-check, and the close ritual. `prd` feeds it scope and acceptance criteria, and
-`design-thinking` feeds `prd` when the problem itself is unvalidated. `brd`
-sits upstream of `prd` when the business case is what needs settling. No skill
-requires the others to be installed.
 
 Discovery stays a separate install from the session loop until evidence shows
 every team needs it. That keeps bounded engineering work low-friction while
