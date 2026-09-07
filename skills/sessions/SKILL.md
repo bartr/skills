@@ -68,6 +68,12 @@ If you cannot answer all three, the session is not ready to start. Record the an
 
 A good failure condition is specific and checkable. "Schema invented rather than inferred from the data files" is a failure condition. "Bad quality" is not.
 
+### Who Frames the Session
+
+A solo engineer frames their own session. When a product manager is involved, framing is joint work: the PM brings the outcome, the constraints, and what must not be built, while the engineer brings feasibility and names the cut. The value is in the conversation, much as it is in t-shirt sizing, not in the artifact it produces.
+
+Keep joint framing to the three questions and the two minutes. Co-framing without reintroducing ticket overhead is an unresolved question in the source methodology, and a framing meeting that grows past a few minutes has become the ceremony this model replaces.
+
 ## The One Rule During a Session
 
 When you feel the urge to pull a thread outside the frame, write it in the parking lot and stay in scope.
