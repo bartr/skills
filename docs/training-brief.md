@@ -23,7 +23,7 @@ Docker only runs on Linux, which means that for Windows and Mac users (95%+ of t
 
 Conducting a class with the requirement to install and configure a Docker VM is a non-starter. You will spend the entire time debugging the environment, particularly when it is locked down by the enterprise.
 
-We therefore recommend the initial classes be held using GitHub Codespaces.
+We therefore recommend the initial classes be held using GitHub Codespaces. Either insure that the audience has access to GitHub Codespaces (and GitHub Copilot with enough tokens) or create (and fund) a GitHub tenant for the class.
 
 ## Two versions of the training
 
@@ -36,7 +36,20 @@ This affects prerequisites. Docker and WSL familiarity matters for the engineeri
 
 Software engineers probably want to attend both, getting to a PRD as well as implementing one. One way to schedule that for a mixed audience is to cover PRDs with everyone, then break the group in two: business users create more PRDs, while engineers work on implementing.
 
-Open question: do the engineers implement the PRDs the business group just wrote, or pre-written ones? Using the fresh PRDs closes a real feedback loop, since authors see what was ambiguous once someone builds from it. It also couples the two breakouts, so a slow morning for one group stalls the other.
+## Mixed-audience scheduling
+
+Two options for what the engineers implement after the split:
+
+* Design a PRD together. The whole group works one PRD end to end.
+* Implement a known PRD first. Engineers start on a prepared PRD, everyone regroups, and the group then does the session breakdown and implements the new PRD the business group wrote.
+
+The feedback loop in the second option is the valuable part. Authors watch someone build from their document and discover exactly what was ambiguous. That is probably the most memorable moment available in the whole course.
+
+The cost is coupling. The breakouts now depend on each other's pace, and a business group still debating scope leaves the engineers idle. Pre-written PRDs remove that risk and remove the lesson with it.
+
+The hedge: give engineers one known-good PRD to start on, then hand over a fresh one from the business group when it is ready. They implement the prepared PRD first and the live one second, so nobody is blocked and the feedback loop still happens.
+
+The regroup is also the natural place to run joint framing. Pair a business author with an engineer and co-frame the first session against a real PRD. That teaches the co-framing seam by doing it rather than describing it, and it answers the question of who plans the sessions in practice rather than in theory.
 
 ## Who plans the sessions
 
@@ -44,10 +57,12 @@ Not sure who plans the sessions. It is likely the PM and the dev team jointly, m
 
 ## Course 2 refined
 
-Rapid Prototyping has become: use Design Thinking and RPI to get to a BRD. Then use Sessions to break the work into manageable releases that can be shipped in 90 to 120 minutes by an SWE, or by a pair of SWEs doing paired development.
+Rapid Prototyping has become: use Design Thinking to get to a PRD. Then use Sessions to break the work into manageable releases, and RPI to implement each one, shipped in 90 to 120 minutes by an SWE or by a pair of SWEs doing paired development.
 
-Open question: BRD or PRD? The original course 2 note said PRD. A BRD settles the business case, while a PRD is the thing an engineer implements. A prototype needs a PRD. Starting from a customer conversation may well produce both, in that order, which would make this the course that shows the whole chain.
+Note on pairing: the session model is defined around one engineer plus an AI assistant. A pair should be expected to finish faster than a solo engineer, but not twice as fast. For a scope framed at 90 to 120 minutes, expect roughly 60 to 90 minutes. Finishing early is a healthy outcome and not a sign the frame was wrong.
 
-Open question: what does RPI do before an artifact exists? RPI is the build loop. Its Research phase suits discovery, but Plan, Implement, and Review operate on code. Getting to a requirements document runs `design-thinking` and then `brd` or `prd`. Worth confirming whether RPI here means the research discipline or the full loop.
+## Teach language-scoped instructions
 
-Note on pairing: the session model is defined around one engineer plus an AI assistant. Pairing works, but it changes what fits in 90 to 120 minutes, so the fit check matters more rather than less.
+GitHub Copilot applies instructions by file pattern, such as `*.go`, `*.ts`, or `*.cs`. This is distinctive to Copilot, it is underused, and the engineering track should teach it and use it.
+
+HVE Core has language-specific content, but it reads as dated and verbose for current models. The part worth writing is what a model still gets wrong without being told: house conventions and the traps in a given codebase, rather than a general tutorial for the language.

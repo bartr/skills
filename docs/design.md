@@ -28,6 +28,43 @@ written notes with cited provenance, rather than assembled through an interview.
 The recurring problem there was not generation speed. It was work that never
 closed: scope drift, unmerged branches, and every session starting cold.
 
+## Install Skills In the Repository
+
+Skills belong inside the repository they serve, not in a user-level or
+extension-managed location outside it. HVE Core installs outside the repository,
+and we take the opposite position deliberately.
+
+In-repo installation gives a team two things it otherwise gives up:
+
+* Customization. A skill in the repository can be edited to match how this team
+  actually works. A skill installed elsewhere is read-only in practice, so local
+  knowledge accumulates outside the workflow instead of inside it.
+* Version control. The team decides when a skill changes, reviews the diff, and
+  ships it with the code it governs. An externally managed skill can change
+  underneath a repository without a commit, which makes behavior unreproducible
+  across machines and over time.
+
+The practical test is whether checking out an old commit reproduces the workflow
+that was in force at the time. That only holds when the skills live with the code.
+
+## Use Language-Scoped Instructions
+
+GitHub Copilot applies instructions by file pattern, so guidance can attach to
+`*.go`, `*.ts`, `*.cs`, or any other glob. That capability is distinctive and
+underused, and it should be both taught and used in what we build.
+
+It matters because scoping changes what the model sees. Language guidance that
+loads only when a matching file is open keeps context focused, and it lets a
+polyglot repository carry conventions per language without one set of standards
+bleeding into another.
+
+HVE Core does ship language-specific content. Our read is that much of it is
+dated and verbose for current models, which are stronger at idiomatic code than
+they were when that material was written. The useful content is the part a model
+still gets wrong without being told: local conventions, house style, and the
+specific traps in this codebase. Write that and leave out the general language
+tutorial.
+
 ## Composition
 
 Every skill is optional, and each one is useful on its own. Skills may use other

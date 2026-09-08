@@ -100,6 +100,8 @@ Between Plan and Implement, spend two minutes:
 
 Never skip the fit check. It is the highest-leverage beat in the workflow.
 
+A pair moves faster than one engineer, but not twice as fast. For a scope framed at 90 to 120 minutes, expect a pair to land closer to 60 to 90. Finishing early is a healthy result, not evidence the frame was too small, so close the session properly rather than pulling in more work.
+
 This is the cheapest moment to cut scope. A deleted bullet costs nothing, while abandoned implementation work costs the rest of the session. It is also the only moment with real data: the frame was a guess, the plan is evidence. Over time, if the fit check keeps cutting the same item, that item stops appearing in frames, which makes the check a calibration loop on framing quality.
 
 ## The Close Ritual
