@@ -41,3 +41,13 @@ Open question: do the engineers implement the PRDs the business group just wrote
 ## Who plans the sessions
 
 Not sure who plans the sessions. It is likely the PM and the dev team jointly, much like Agile t-shirt sizing, where the value is in the conversation rather than in the number. Both training versions should cover this, since it is the seam where the two audiences meet.
+
+## Course 2 refined
+
+Rapid Prototyping has become: use Design Thinking and RPI to get to a BRD. Then use Sessions to break the work into manageable releases that can be shipped in 90 to 120 minutes by an SWE, or by a pair of SWEs doing paired development.
+
+Open question: BRD or PRD? The original course 2 note said PRD. A BRD settles the business case, while a PRD is the thing an engineer implements. A prototype needs a PRD. Starting from a customer conversation may well produce both, in that order, which would make this the course that shows the whole chain.
+
+Open question: what does RPI do before an artifact exists? RPI is the build loop. Its Research phase suits discovery, but Plan, Implement, and Review operate on code. Getting to a requirements document runs `design-thinking` and then `brd` or `prd`. Worth confirming whether RPI here means the research discipline or the full loop.
+
+Note on pairing: the session model is defined around one engineer plus an AI assistant. Pairing works, but it changes what fits in 90 to 120 minutes, so the fit check matters more rather than less.
