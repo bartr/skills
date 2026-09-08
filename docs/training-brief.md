@@ -66,3 +66,55 @@ Note on pairing: the session model is defined around one engineer plus an AI ass
 GitHub Copilot applies instructions by file pattern, such as `*.go`, `*.ts`, or `*.cs`. This is distinctive to Copilot, it is underused, and the engineering track should teach it and use it.
 
 HVE Core has language-specific content, but it reads as dated and verbose for current models. The part worth writing is what a model still gets wrong without being told: house conventions and the traps in a given codebase, rather than a general tutorial for the language.
+
+## Delivery coverage
+
+Course 2 has a delivery design. Courses 1 and 3 have content intent but no delivery design yet.
+
+| Course | Delivery documented | What exists today |
+|--------|---------------------|-------------------|
+| 1. Deep dive, 3-4 hours, recorded, GSIs | No | Content list only |
+| 2. Rapid Prototyping, 2-3 hours, SI events | Yes | Environment, track split, scheduling, hedge, joint framing, pairing, skill flow |
+| 3. Full course, 8-12 hours, private GSI | No | Instructor staffing statement only |
+
+### Course 1 open questions
+
+Course 1 is a recording, so most of the delivery thinking above does not apply to it. There are no breakouts, no live environment to debug, and no feedback loop between groups.
+
+* Purely recorded, or a recorded live delivery?
+* Do viewers need a working environment, or do they only watch?
+* What are the module breakpoints across 3 to 4 hours?
+* Who re-records it when the skills change, and how often?
+* Content gap: the brief calls for shifting security and governance to the left. Nothing in the current skill set covers that. Either the topic gets built or course 1 promises something we cannot deliver.
+
+### Course 3 open questions
+
+* Is 8 to 12 hours one day, two days, or spread over time?
+* Is it courses 1 and 2 expanded, or distinct material?
+* Train the trainer. Suppliers may hire MVPs, so people who did not build this will teach it. What ships in the instructor kit: run sheet with timings, lab repo, known-good PRD, worked solutions, and common failure modes?
+* Who funds Codespaces for a private client delivery?
+
+### Course 2 timing check
+
+The design is sound but the clock is tight. A PRD block, a session a pair finishes in 60 to 90 minutes, a regroup, and joint framing all have to fit inside 2 to 3 hours. That works only if the PRD block is firmly timeboxed and the implementation scope is deliberately small. There is no slack for a Codespaces problem or a business group that keeps debating scope.
+
+### Missing for all three
+
+* A run sheet with timings.
+* The prepared lab repo and known-good PRD as real assets.
+* Success measures.
+* Who builds the materials, and by when.
+* An update cadence as the skills change.
+
+## Recommended next step
+
+Run `design-thinking` with the business owner to agree on which recording and which classes we create and deliver. Most of the input that conversation needs is already captured here.
+
+Once those questions are answered, generate a BRD from this brief and implement the BRD using `sessions`.
+
+Two things that make this work in practice:
+
+* The conversation has to write back into this brief. `brd` builds from notes with cited provenance, so decisions made out loud and never recorded return as open questions rather than as requirements.
+* Discovery should decide scope, not just confirm it. Courses 1 and 3 are unbuilt, so cutting or sequencing may be a better outcome than committing to all three at once.
+
+This also makes the training program its own worked example. Discovery to BRD to sessions is the chain the courses teach, so the artifacts produced along the way can double as course material.
