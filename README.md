@@ -1,5 +1,5 @@
 ---
-title: Context-First Copilot Skills
+title: new-method Copilot Skills
 description: Reusable GitHub Copilot skills for session-based AI-native engineering, from business case through discovery, requirements, and delivery.
 ---
 
@@ -12,6 +12,10 @@ delivery.
 
 The skills are owned, reviewed, and versioned here. They draw on published
 patterns but do not depend on any framework at runtime.
+
+`new-method` is a placeholder. This effort does not have an agreed name yet, and
+`context-first` is a separate effort whose name we do not own. See
+[Naming](docs/design.md#naming).
 
 ## Skills in This Repository
 

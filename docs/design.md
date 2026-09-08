@@ -1,6 +1,6 @@
 ---
 title: Design and Delivery Plan
-description: Approach, target architecture, installer requirements, and delivery status for the context-first skill set.
+description: Approach, target architecture, installer requirements, and delivery status for the new-method skill set.
 ---
 
 ## Approach
@@ -27,6 +27,28 @@ written notes with cited provenance, rather than assembled through an interview.
 `sessions` came out of our experience working with GSIs and enterprise customers.
 The recurring problem there was not generation speed. It was work that never
 closed: scope drift, unmerged branches, and every session starting cold.
+
+## Naming
+
+This effort needs a name and does not have one yet. Treat every occurrence of
+`new-method` in this repository as a placeholder to be replaced once the name is
+settled.
+
+Constraints:
+
+* HVE is not available. That team retains the HVE name and charter.
+* `context-first` is a candidate, but it is currently a separate effort. Adopting
+  it now would conflate two things that are not yet the same thing, and would
+  claim a name we do not own.
+
+The name reaches further than a rename usually implies. It appears in the
+repository name, the plugin identity, the installer script names, document
+titles, and any course material that references them. Settling it early costs
+less than settling it after the first delivery.
+
+Attribution is separate from naming. Credits that reference `context-first` or
+HVE Core cite the source of a methodology and stay as they are regardless of what
+this effort ends up being called.
 
 ## Install Skills In the Repository
 
@@ -118,7 +140,7 @@ See the [skills catalog](../README.md#skills-in-this-repository) for what exists
 
 | Artifact | Responsibility | Planned form |
 |----------|----------------|--------------|
-| `context-first` plugin | Groups the maintained skills for installation | `plugins/context-first/plugin.json` |
+| `new-method` plugin | Groups the maintained skills for installation | `plugins/new-method/plugin.json` |
 
 ## Selective Installer
 
