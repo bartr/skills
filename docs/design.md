@@ -1,11 +1,12 @@
 ---
 title: Design and Delivery Plan
-description: Approach, distribution rationale, target architecture, installer requirements, update policy, and delivery status for the new-method skill set.
+description: Approach, distribution rationale, target architecture, installation with gh skill, update policy, and delivery status for the new-method skill set.
 ---
 
 ## Approach
 
-We use the GitHub CLI skills command, the same mechanism
+We distribute with `gh skill`, the first-party GitHub CLI command for agent
+skills, which is the same mechanism
 [Awesome Copilot](https://github.com/github/awesome-copilot) uses to distribute
 its catalog. This is a choice of plumbing, not a dependency on a catalog or a
 framework. Skills are markdown packages that install into a repository, so teams
@@ -37,8 +38,8 @@ over the GitHub CLI, rather than a package registry or an editor extension, are
 separate and worth stating on their own, because they are what makes this
 approach survive contact with an enterprise.
 
-* Plumbing the customer already has. `gh api` is authenticated against the
-  session the developer is already signed into. It works against private and
+* Plumbing the customer already has. `gh` is authenticated against the session
+  the developer is already signed into. It works against private and
   internal repositories and honors SSO and SAML the way every other GitHub
   operation does. There is no new credential for a security team to review and
   no registry account to provision. For GSI and enterprise delivery, "it uses
@@ -49,21 +50,21 @@ approach survive contact with an enterprise.
   the entire distribution system.
 * The files are the artifact. No build step, no lockfile format, no runtime.
   What a reviewer approves in a pull request is byte for byte what lands in the
-  consuming repository's `.github/` directory. That is what lets this document
-  claim a choice of plumbing rather than a dependency, and the claim is
-  checkable: no `SKILL.md` here refers to the installer, the profiles, or the
-  manifest. Content and distribution stay separable, and a team that decides to
-  copy the files in by hand loses nothing.
+  consuming repository's `.agents/skills` directory. That is what lets this
+  document claim a choice of plumbing rather than a dependency, and the claim is
+  checkable: no `SKILL.md` here refers to `gh skill`, to a profile, or to any
+  installation mechanism at all. Content and distribution stay separable, and a
+  team that decides to copy the folders in by hand loses nothing.
 * Git already provides the hard parts. Immutable refs, signed tags, blame, diff,
   revert, branch protection, required reviews, and CODEOWNERS all apply without
   being reimplemented. A skill change is reviewed on the same gate as a code
   change because it is a code change.
-* Nothing we ship executes on the consumer's machine. `gh api` fetches bytes and
-  the installer writes bytes. The rules against executing downloaded content and
-  against `curl | bash` are what make it safe to point this at a customer
-  repository, and they are a materially different threat model from a package
-  manager that runs publisher-authored install hooks. The consumer's audit
-  question is answerable by reading a diff.
+* Nothing we ship executes on the consumer's machine. We ship markdown and a
+  tag. There is no install hook, no post-install script, and no installer of
+  ours to review, because `gh skill` does the fetching and writing. That is a
+  materially different threat model from a package manager that runs
+  publisher-authored code, and the consumer's audit question is answerable by
+  reading a diff.
 
 ## Naming
 
@@ -79,7 +80,7 @@ Constraints:
   claim a name we do not own.
 
 The name reaches further than a rename usually implies. It appears in the
-repository name, the plugin identity, the installer script names, document
+repository name, the plugin identity, the install commands we publish, document
 titles, and any course material that references them. Settling it early costs
 less than settling it after the first delivery.
 
@@ -178,51 +179,84 @@ See the [skills catalog](../README.md#skills-in-this-repository) for what exists
 | Artifact | Responsibility | Planned form |
 |----------|----------------|--------------|
 | `new-method` plugin | Groups the maintained skills for installation | `plugins/new-method/plugin.json` |
+| Release tags | Give consumers something to pin with `--pin` | Signed `0.x.y` tags plus a changelog |
 
-## Selective Installer
+## Installing With gh skill
 
-Provide a repository-owned installer at `scripts/install-awesome-copilot-rpi.sh`
-and a PowerShell equivalent at `scripts/Install-AwesomeCopilotRpi.ps1`. The
-installer uses the GitHub CLI to download only the allowlisted artifacts selected
-by a profile, then writes them into the consuming repository's `.github/`
-directory.
+`gh skill` is a first-party GitHub CLI command, in public preview and requiring
+GitHub CLI v2.90.0 or later. It installs, previews, lists, updates, and
+publishes agent skills. `gh skills` is an accepted alias.
 
-Supported initial profiles:
+We do not ship an installer. An earlier version of this plan specified a
+repository-owned Bash and PowerShell installer with its own allowlist, manifest,
+and verification flags. `gh skill` covers that surface, and a first-party
+command a customer's security team already trusts beats a script of ours that
+does the same job.
 
-| Profile | Installed artifacts | Intended use |
-|---------|---------------------|--------------|
-| `rpi` | `rpi` alone | A single non-trivial task, without the session loop |
-| `session` | `sessions`, `rpi`, and `prd` | Engineering teams with settled requirements |
-| `discovery` | `design-thinking`, `brd`, and `prd` | Customer discovery, workshops, and ambiguous requests |
-| `full` | All five skills | Discovery that continues into delivery |
-| `governed` | `full` plus organization-approved instructions | Teams that require prescribed engineering or security standards |
+This repository is already discoverable as-is. `gh skill` finds skills by the
+`skills/*/SKILL.md` convention from the [Agent Skills
+specification](https://agentskills.io/specification), which is the layout these
+five skills already use, bundled `assets/` directories included. No repackaging,
+no build step, and no release asset is required.
 
-The installer must:
-
-1. Require `gh` and an authenticated GitHub session.
-2. Require `--ref <tag-or-full-sha>` and reject an unpinned branch such as `main`.
-3. Download every selected artifact with `gh api repos/<owner>/<repo>/contents/<path>?ref=<ref>`.
-4. Enforce a hard-coded allowlist of paths and reject traversal or unrecognized selections.
-5. Validate that each downloaded skill has a matching `name` in `SKILL.md` frontmatter.
-6. Write an installation manifest containing the source repository, immutable ref,
-   selected profile, artifact paths, and file hashes.
-7. Support `--dry-run`, `--force`, and `--verify` so teams can review, update, and
-   validate installations predictably.
-8. Never execute downloaded content during installation and never use `curl | bash`.
-9. Merge rather than overwrite when updating a skill that has been modified
-   locally, using the ref recorded in the manifest as the merge base. See
-   [Updating Installed Skills](#updating-installed-skills).
-
-Example consumer usage after the package is published and tagged:
+### Installing
 
 ```bash
-gh repo clone <our-org>/copilot-rpi
-cd copilot-rpi
-./scripts/install-awesome-copilot-rpi.sh \
-  --target ../customer-repository \
-  --profile full \
-  --ref v1.0.0
+# one skill, pinned
+gh skill install <owner>/<repo> rpi --pin 0.2.0
+
+# the whole set
+gh skill install <owner>/<repo> --all --pin 0.2.0
+
+# read it before installing anything
+gh skill preview <owner>/<repo> rpi
+
+# what is installed here now
+gh skill list
 ```
+
+Pin every install. Without `@version` or `--pin`, the command resolves to the
+latest tagged release and falls back to the default branch when no tag exists,
+so an unpinned install against an untagged repository silently takes whatever
+is on the branch. `skill@0.2.0` and `--pin 0.2.0` are equivalent, and both
+accept a tag or a commit SHA.
+
+### Placement
+
+The default scope is `project`, which installs inside the current repository.
+That is the position argued in [Install Skills In the
+Repository](#install-skills-in-the-repository), and it is the default we want,
+so the flag usually does not need to be passed at all. `--scope user` installs
+to the home directory instead and gives up the reproducibility argument.
+
+At project scope, GitHub Copilot and most other supported agents share the
+`.agents/skills` directory, so one install serves a mixed-tool team rather than
+one per agent. `--agent` selects a host explicitly and `--dir` overrides
+placement entirely.
+
+Commit what lands. The install is only reproducible if the installed files are
+in the repository's history alongside the code they govern.
+
+### Profiles
+
+Profiles are a documentation convention here, not a flag. `gh skill install`
+takes skill names, so a profile is the set of names a situation calls for.
+
+| Profile | Skills | Intended use |
+|---------|--------|--------------|
+| `rpi` | `rpi` | A single non-trivial task, without the session loop |
+| `session` | `sessions`, `rpi`, `prd` | Engineering teams with settled requirements |
+| `discovery` | `design-thinking`, `brd`, `prd` | Customer discovery, workshops, and ambiguous requests |
+| `full` | All five | Discovery that continues into delivery |
+| `governed` | `full` plus organization-approved instructions | Teams that require prescribed engineering or security standards |
+
+```bash
+gh skill install <owner>/<repo> sessions rpi prd --pin 0.2.0   # session profile
+```
+
+Install the profile that owns the next decision rather than `full`. Every
+unused skill is more context to disambiguate against, which costs triggering
+accuracy rather than adding capability.
 
 ## Updating Installed Skills
 
@@ -238,15 +272,15 @@ and no update lands without a diff someone read.
 
 Consumers can only pin to what we publish, so the publishing side comes first.
 
-* Tags are immutable. A wrong `v1.0.0` is fixed by `v1.0.1`, never by moving the
-  tag. A moved tag invalidates every manifest hash downstream and destroys the
-  reproducibility this whole approach rests on.
+* Tags are immutable. A wrong `0.2.0` is fixed by `0.2.1`, never by moving the
+  tag. Consumers pin to tags and `gh skill` records the tree SHA it installed,
+  so a moved tag makes every downstream install unreproducible.
 * Version the skill set, not each skill. Patch is wording, minor is a new skill
   or a new optional step, major is a renamed skill, a moved path, or a changed
   template structure.
-* Artifact paths and the `name` in `SKILL.md` frontmatter are the public API.
-  The installer allowlist and its frontmatter validation both key on them, so
-  moving or renaming either is a breaking change.
+* Skill directory names under `skills/` are the public API. They are what
+  `gh skill install <owner>/<repo> <name>` resolves against, so renaming or
+  moving one breaks every pinned install command in circulation.
 * Sign release tags. It is the answer when a customer asks how they know the
   skill they installed is the one we published.
 * Keep a changelog that names which sections of a skill changed, not only which
@@ -260,7 +294,7 @@ reject for externally managed installs.
 
 | Trigger | Action |
 |---------|--------|
-| Start of a project or engagement | Install the current release, pinned |
+| Start of a project or engagement | `gh skill install` the current release, pinned |
 | Between phases, such as discovery closing and delivery opening | Update if the profile needs to change |
 | A `sessions` close where a skill visibly misfired | Update, or fix locally and consider upstreaming |
 | A new upstream major | Read the changelog and schedule the merge deliberately |
@@ -272,22 +306,54 @@ produced this release" answerable from git alone.
 
 ### Detecting Drift
 
-`--verify` re-hashes installed files against the manifest. The three results it
-can return are three different pieces of work.
+`gh skill update` compares the tree SHA recorded in each installed `SKILL.md`
+frontmatter against the remote repository, so drift detection needs no manifest
+of ours.
 
-| State | Meaning | Action |
-|-------|---------|--------|
-| Clean | Files match the manifest hashes | Update to the new ref, review the diff, commit |
-| Locally modified | The team edited the skill | Three-way merge, using the manifest ref as the base |
-| Upstream-only change | New release, files untouched locally | Update as clean, and read the changelog for behavior changes |
+```bash
+gh skill update --dry-run          # report what is stale, change nothing
+```
+
+One consequence is easy to miss: `gh skill update` deliberately skips pinned
+skills. If every install is pinned, as it should be, then `--dry-run` reports
+nothing and is not the signal to watch. Drive updates from our releases instead,
+by watching this repository's releases and reading the changelog, then
+reinstalling at the new tag.
+
+| State | How you learn about it | Action |
+|-------|------------------------|--------|
+| A new release exists | Release watch and changelog, not `--dry-run` | Reinstall pinned at the new tag |
+| Installed files are unmodified | `git status` on the installed paths is clean | Reinstall with `--force`, review the diff, commit |
+| Installed files were edited locally | `git log` on the installed paths | Merge, per below, rather than `--force` |
+
+Because installs are committed, git answers the drift question directly. The
+installed skill has a history, and the commit that installed it cleanly is the
+merge base.
 
 ### Merging Local Edits
 
-`--force` over a locally customized skill destroys exactly the local knowledge
-that in-repo installation exists to capture. The installer must offer a real
-three-way merge instead, and it already holds everything required: the manifest
-names the base ref, `gh api` fetches that base revision, and `git merge-file`
-resolves against the new one.
+`gh skill` has no three-way merge. `gh skill update --force` re-downloads and
+overwrites locally modified files with their upstream content, which destroys
+exactly the local knowledge that in-repo installation exists to capture.
+
+Git supplies the missing piece, on the condition that each clean install is
+committed on its own. That commit is the merge base.
+
+```bash
+SKILL=.agents/skills/rpi/SKILL.md
+BASE=$(mktemp) LOCAL=$(mktemp)
+
+git show <clean-install-commit>:"$SKILL" > "$BASE"   # upstream at the old pin
+cp "$SKILL" "$LOCAL"                                 # our edited version
+
+gh skill install <owner>/<repo> rpi --pin 0.2.0 --force   # upstream at the new pin
+cp "$SKILL" "$BASE.new" && cp "$LOCAL" "$SKILL"
+
+git merge-file "$SKILL" "$BASE" "$BASE.new"
+```
+
+`git merge-file <current> <base> <other>` merges in place and exits with the
+conflict count, so a clean merge is silent and a conflicted one is reported.
 
 At merge time, sort every local edit into one of two kinds:
 
@@ -320,9 +386,9 @@ until that refresh ships.
 | 3 | Author the `prd` skill and PRD template | Done |
 | 4 | Author the `rpi` skill as a standalone inner loop that other skills leverage | Done |
 | 5 | Author the `brd` skill and BRD template | Done |
-| 6 | Build the Bash and PowerShell selective installers with the controls above | Next |
-| 7 | Cut and sign the first release tag and start the changelog, so there is a pinnable ref to install from | Not started |
-| 8 | Test installation from a release tag into an empty fixture repository, and verify each skill is discoverable by GitHub Copilot | Not started |
-| 9 | Test the update path against that fixture, covering a clean update, a locally modified skill, and a rejected unpinned ref | Not started |
-| 10 | Package the artifacts as a plugin and submit through the Awesome Copilot validation and contribution workflow, or host it as an independently versioned plugin | Not started |
-| 11 | Pilot with one delivery team and measure time to a validated plan, implementation rework, review findings, and installer success rate | Not started |
+| 6 | Cut and sign `0.1.0` and start the changelog, so there is a pinnable tag to install from | Next |
+| 7 | Verify `gh skill install` against a fixture repository: discovery of all five skills, bundled assets, pinning, and `--all` | Not started |
+| 8 | Verify each installed skill is discovered by GitHub Copilot from `.agents/skills` at project scope | Not started |
+| 9 | Cut `0.2.0` and walk the documented update path, covering a clean reinstall and a locally modified skill merged with `git merge-file` | Not started |
+| 10 | Package the artifacts as a plugin and submit through the Awesome Copilot validation and contribution workflow, or publish with `gh skill publish` as an independently versioned set | Not started |
+| 11 | Pilot with one delivery team and measure time to a validated plan, implementation rework, review findings, and install success rate | Not started |
