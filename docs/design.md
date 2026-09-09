@@ -172,6 +172,9 @@ The installer must:
 7. Support `--dry-run`, `--force`, and `--verify` so teams can review, update, and
    validate installations predictably.
 8. Never execute downloaded content during installation and never use `curl | bash`.
+9. Merge rather than overwrite when updating a skill that has been modified
+   locally, using the ref recorded in the manifest as the merge base. See
+   [Updating Installed Skills](#updating-installed-skills).
 
 Example consumer usage after the package is published and tagged:
 
@@ -184,6 +187,93 @@ cd copilot-rpi
   --ref v1.0.0
 ```
 
+## Updating Installed Skills
+
+In-repo installation buys customization and reproducibility, and it pays for
+both with drift. A skill a team can edit is a skill that will diverge from
+upstream. That is the intended trade, not a defect, but it only stays a good
+trade if updating is a defined ritual rather than an overwrite.
+
+Treat installed skills as vendored, not subscribed. Nothing updates on its own,
+and no update lands without a diff someone read.
+
+### Release Contract
+
+Consumers can only pin to what we publish, so the publishing side comes first.
+
+* Tags are immutable. A wrong `v1.0.0` is fixed by `v1.0.1`, never by moving the
+  tag. A moved tag invalidates every manifest hash downstream and destroys the
+  reproducibility this whole approach rests on.
+* Version the skill set, not each skill. Patch is wording, minor is a new skill
+  or a new optional step, major is a renamed skill, a moved path, or a changed
+  template structure.
+* Artifact paths and the `name` in `SKILL.md` frontmatter are the public API.
+  The installer allowlist and its frontmatter validation both key on them, so
+  moving or renaming either is a breaking change.
+* Sign release tags. It is the answer when a customer asks how they know the
+  skill they installed is the one we published.
+* Keep a changelog that names which sections of a skill changed, not only which
+  files. A team that edited a skill locally needs to know what to re-read.
+
+### Update Cadence
+
+Update on project milestones, not on a calendar. An automatic weekly bump
+changes agent behavior mid-session, which is the same unreproducibility we
+reject for externally managed installs.
+
+| Trigger | Action |
+|---------|--------|
+| Start of a project or engagement | Install the current release, pinned |
+| Between phases, such as discovery closing and delivery opening | Update if the profile needs to change |
+| A `sessions` close where a skill visibly misfired | Update, or fix locally and consider upstreaming |
+| A new upstream major | Read the changelog and schedule the merge deliberately |
+| Mid-session, mid-cohort, or mid-release | Do not update |
+
+Record the installed ref in the session log entry. `sessions` already ends in a
+tag and a written paragraph, so adding the ref makes "which methodology version
+produced this release" answerable from git alone.
+
+### Detecting Drift
+
+`--verify` re-hashes installed files against the manifest. The three results it
+can return are three different pieces of work.
+
+| State | Meaning | Action |
+|-------|---------|--------|
+| Clean | Files match the manifest hashes | Update to the new ref, review the diff, commit |
+| Locally modified | The team edited the skill | Three-way merge, using the manifest ref as the base |
+| Upstream-only change | New release, files untouched locally | Update as clean, and read the changelog for behavior changes |
+
+### Merging Local Edits
+
+`--force` over a locally customized skill destroys exactly the local knowledge
+that in-repo installation exists to capture. The installer must offer a real
+three-way merge instead, and it already holds everything required: the manifest
+names the base ref, `gh api` fetches that base revision, and `git merge-file`
+resolves against the new one.
+
+At merge time, sort every local edit into one of two kinds:
+
+* Project-specific. Codebase traps, house conventions, and the language-scoped
+  guidance described above. These stay local permanently and are re-applied on
+  every update.
+* Generally useful. If several teams made the same edit, it belongs upstream.
+  Open a pull request here, then drop the local change once it ships.
+
+Skipping that sort is how a fork widens on every cycle until updating stops
+being worth attempting.
+
+### Pinning for Course Delivery
+
+Freeze the ref for the duration of a cohort. The lab repository, the known-good
+PRD, and the run sheet timings are all coupled to specific skill wording, so an
+upstream update mid-course invalidates the instructor kit.
+
+This also answers an open question in the [training
+brief](training-brief.md#course-1-open-questions): whoever cuts a major version
+owns refreshing the recorded and printed material, and courses pin to a tag
+until that refresh ships.
+
 ## Delivery Plan
 
 | Step | Work | Status |
@@ -194,6 +284,8 @@ cd copilot-rpi
 | 4 | Author the `rpi` skill as a standalone inner loop that other skills leverage | Done |
 | 5 | Author the `brd` skill and BRD template | Done |
 | 6 | Build the Bash and PowerShell selective installers with the controls above | Next |
-| 7 | Test installation from a release tag into an empty fixture repository, and verify each skill is discoverable by GitHub Copilot | Not started |
-| 8 | Package the artifacts as a plugin and submit through the Awesome Copilot validation and contribution workflow, or host it as an independently versioned plugin | Not started |
-| 9 | Pilot with one delivery team and measure time to a validated plan, implementation rework, review findings, and installer success rate | Not started |
+| 7 | Cut and sign the first release tag and start the changelog, so there is a pinnable ref to install from | Not started |
+| 8 | Test installation from a release tag into an empty fixture repository, and verify each skill is discoverable by GitHub Copilot | Not started |
+| 9 | Test the update path against that fixture, covering a clean update, a locally modified skill, and a rejected unpinned ref | Not started |
+| 10 | Package the artifacts as a plugin and submit through the Awesome Copilot validation and contribution workflow, or host it as an independently versioned plugin | Not started |
+| 11 | Pilot with one delivery team and measure time to a validated plan, implementation rework, review findings, and installer success rate | Not started |

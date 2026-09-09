@@ -57,7 +57,7 @@ ambiguous customer request starts further left.
 
 | Document | Contents |
 |----------|----------|
-| [docs/design.md](docs/design.md) | Distribution decision, target architecture, installer requirements, and delivery status |
+| [docs/design.md](docs/design.md) | Distribution decision, target architecture, installer requirements, the skill update policy, and delivery status |
 | [docs/training-brief.md](docs/training-brief.md) | Raw stakeholder request for Copilot training offerings, pending a BRD |
 
 ## License
