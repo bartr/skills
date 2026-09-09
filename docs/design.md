@@ -386,7 +386,7 @@ until that refresh ships.
 | 3 | Author the `prd` skill and PRD template | Done |
 | 4 | Author the `rpi` skill as a standalone inner loop that other skills leverage | Done |
 | 5 | Author the `brd` skill and BRD template | Done |
-| 6 | Cut and sign `0.1.0` and start the changelog, so there is a pinnable tag to install from | Next |
+| 6 | Cut and sign `0.1.0` and start the changelog, so there is a pinnable tag to install from | Done |
 | 7 | Verify `gh skill install` against a fixture repository: discovery of all five skills, bundled assets, pinning, and `--all` | Not started |
 | 8 | Verify each installed skill is discovered by GitHub Copilot from `.agents/skills` at project scope | Not started |
 | 9 | Cut `0.2.0` and walk the documented update path, covering a clean reinstall and a locally modified skill merged with `git merge-file` | Not started |

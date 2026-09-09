@@ -57,6 +57,7 @@ ambiguous customer request starts further left.
 
 | Document | Contents |
 |----------|----------|
+| [CHANGELOG.md](CHANGELOG.md) | Released versions and what changed in each |
 | [AGENTS.md](AGENTS.md) | Repository memory: settled decisions and conventions for AI assistants working here |
 | [docs/design.md](docs/design.md) | Distribution decision and rationale, target architecture, installation with `gh skill`, the skill update policy, and delivery status |
 | [docs/training-brief.md](docs/training-brief.md) | Raw stakeholder request for Copilot training offerings, pending a BRD |
