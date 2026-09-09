@@ -1,6 +1,6 @@
 ---
 title: Design and Delivery Plan
-description: Approach, target architecture, installer requirements, and delivery status for the new-method skill set.
+description: Approach, distribution rationale, target architecture, installer requirements, update policy, and delivery status for the new-method skill set.
 ---
 
 ## Approach
@@ -27,6 +27,43 @@ written notes with cited provenance, rather than assembled through an interview.
 `sessions` came out of our experience working with GSIs and enterprise customers.
 The recurring problem there was not generation speed. It was work that never
 closed: scope drift, unmerged branches, and every session starting cold.
+
+## Why the GitHub CLI and a Plain Repository
+
+The customization and version control arguments for installing into the
+repository are made in [Install Skills In the
+Repository](#install-skills-in-the-repository). The reasons to carry the skills
+over the GitHub CLI, rather than a package registry or an editor extension, are
+separate and worth stating on their own, because they are what makes this
+approach survive contact with an enterprise.
+
+* Plumbing the customer already has. `gh api` is authenticated against the
+  session the developer is already signed into. It works against private and
+  internal repositories and honors SSO and SAML the way every other GitHub
+  operation does. There is no new credential for a security team to review and
+  no registry account to provision. For GSI and enterprise delivery, "it uses
+  the GitHub CLI you are already logged into" clears procurement in a way that a
+  new package feed does not.
+* No registry to operate. No service to run, no uptime to own, no account that
+  has to be transferred when someone changes teams. A repository and a tag are
+  the entire distribution system.
+* The files are the artifact. No build step, no lockfile format, no runtime.
+  What a reviewer approves in a pull request is byte for byte what lands in the
+  consuming repository's `.github/` directory. That is what lets this document
+  claim a choice of plumbing rather than a dependency, and the claim is
+  checkable: no `SKILL.md` here refers to the installer, the profiles, or the
+  manifest. Content and distribution stay separable, and a team that decides to
+  copy the files in by hand loses nothing.
+* Git already provides the hard parts. Immutable refs, signed tags, blame, diff,
+  revert, branch protection, required reviews, and CODEOWNERS all apply without
+  being reimplemented. A skill change is reviewed on the same gate as a code
+  change because it is a code change.
+* Nothing we ship executes on the consumer's machine. `gh api` fetches bytes and
+  the installer writes bytes. The rules against executing downloaded content and
+  against `curl | bash` are what make it safe to point this at a customer
+  repository, and they are a materially different threat model from a package
+  manager that runs publisher-authored install hooks. The consumer's audit
+  question is answerable by reading a diff.
 
 ## Naming
 
