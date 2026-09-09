@@ -44,8 +44,8 @@ Notes on this release:
 
 * `gh skill` is in public preview and requires GitHub CLI v2.90.0 or later. A
   delivery standing on it carries that risk.
-* The tag is signed with the key available to the automation that cut it, which
-  is not yet an owner key. Verified-publisher provenance starts when releases
-  are cut with a maintainer key.
+* The tag is signed with a maintainer key. Automation in this repository can
+  push branches but not tags, so releases are cut by a maintainer rather than by
+  a job, which is also what makes the signature worth checking.
 * No skill content changed between this tag and the branch history preceding it.
   The work leading up to 0.1.0 was documentation.
