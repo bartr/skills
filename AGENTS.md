@@ -91,6 +91,23 @@ generic technical writing.
 Claims should be checkable. When the documentation asserts something about the
 repository, prefer an assertion a reader can verify with a command.
 
+## Never Commit to main
+
+Every change lands on a branch first, including documentation-only changes,
+which is nearly all of them here. A docs repository invites the "it is just a
+wording fix" exception. There is no such exception.
+
+The branch name carries no meaning. Name it for the work and delete it on merge.
+
+Close as the `sessions` skill prescribes: fast-forward merge, then tag the
+dot-release. See [The Close Ritual](skills/sessions/SKILL.md).
+
+```bash
+git switch -c <name-for-the-work>
+# commit
+git push -u origin <name-for-the-work>
+```
+
 ## Releases
 
 Consumers pin, so tags are the contract.
