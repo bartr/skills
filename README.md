@@ -1,7 +1,6 @@
----
-title: new-method Copilot Skills
-description: Reusable GitHub Copilot skills for session-based AI-native engineering, from business case through discovery, requirements, and delivery.
----
+# BartR Copilot Skills
+
+Reusable GitHub Copilot skills for session-based AI-native engineering, from business case through discovery, requirements, and delivery.
 
 ## Overview
 

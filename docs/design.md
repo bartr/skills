@@ -1,7 +1,6 @@
----
-title: Design and Delivery Plan
-description: Approach, distribution rationale, target architecture, installation with gh skill, update policy, and delivery status for the new-method skill set.
----
+# Design and Delivery Plan
+
+Approach, distribution rationale, target architecture, installation with gh skill, update policy, and delivery status for the new-method skill set.
 
 ## Approach
 
