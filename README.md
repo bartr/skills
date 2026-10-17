@@ -12,10 +12,6 @@ delivery.
 The skills are owned, reviewed, and versioned here. They draw on published
 patterns but do not depend on any framework at runtime.
 
-`new-method` is a placeholder. This effort does not have an agreed name yet, and
-`context-first` is a separate effort whose name we do not own. See
-[Naming](docs/design.md#naming).
-
 ## Skills in This Repository
 
 | Skill | Responsibility | Location |
@@ -60,6 +56,7 @@ ambiguous customer request starts further left.
 | [AGENTS.md](AGENTS.md) | Repository memory: settled decisions and conventions for AI assistants working here |
 | [docs/design.md](docs/design.md) | Distribution decision and rationale, target architecture, installation with `gh skill`, the skill update policy, and delivery status |
 | [docs/training-brief.md](docs/training-brief.md) | Raw stakeholder request for Copilot training offerings, pending a BRD |
+| [docs/wharf-retro.md](docs/wharf-retro.md) | Analysis of the Wharf repository, where these skills were used to deliver a v1 product |
 
 ## License
 
